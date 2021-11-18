@@ -5,27 +5,32 @@ import { Message } from "./message";
 import { useStyles } from "./use-styles";
 import IconButton from "@mui/material/IconButton";
 import { indigo, blue } from "@mui/material/colors";
+import { v4 as uuidv4 } from "uuid";
 
 export const MessageList = () => {
   const styles = useStyles();
   const [messages, setMessages] = useState([]);
   const [value, setValue] = useState("");
-
   const ref = useRef(null);
+  const refMessages = useRef(null);
 
   useEffect(() => {
     const lastMessages = messages[messages.length - 1];
     let timerId = null;
-
     if (messages.length && lastMessages.author !== "Bot") {
+      refMessages.current?.scrollTo(0, refMessages.current?.scrollHeight);
       timerId = setTimeout(() => {
         setMessages([
           ...messages,
-          { author: "Bot", message: "hello from bot", date: new Date() },
+          {
+            author: "Bot",
+            message: "hello from bot",
+            date: new Date(),
+            id: uuidv4(),
+          },
         ]);
       }, 1000);
     }
-
     return () => clearInterval(timerId);
   }, [messages]);
 
@@ -37,7 +42,7 @@ export const MessageList = () => {
     if (value) {
       setMessages([
         ...messages,
-        { author: "User", message: value, date: new Date() },
+        { author: "User", message: value, date: new Date(), id: uuidv4() },
       ]);
       setValue("");
     }
@@ -50,7 +55,7 @@ export const MessageList = () => {
   };
   return (
     <div className={styles.wrapper}>
-      <div className={styles.massages}>
+      <div className={styles.massages} ref={refMessages}>
         {messages.map((message, index) => (
           <Message message={message} key={index} />
         ))}

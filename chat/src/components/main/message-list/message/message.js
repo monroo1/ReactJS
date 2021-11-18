@@ -7,7 +7,7 @@ export const Message = memo(({ message }) => {
   const styles = useStyles();
 
   return (
-    <div
+    <div id={message.id}
       className={
         message.author !== "Bot" ? styles.userMessage : styles.botMessage
       }
