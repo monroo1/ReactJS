@@ -1,2 +1,4 @@
 export * from "./header";
-export * from "./main";
+export * from "./chat";
+export * from "./message-list";
+export * from "./layout";

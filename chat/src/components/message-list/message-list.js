@@ -1,62 +1,66 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Input, InputAdornment } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Input, InputAdornment, IconButton } from "@mui/material";
 import { Send, Add } from "@mui/icons-material";
 import { Message } from "./message";
 import { useStyles } from "./use-styles";
-import IconButton from "@mui/material/IconButton";
 import { indigo, blue } from "@mui/material/colors";
-import { v4 as uuidv4 } from "uuid";
+import { useParams } from "react-router-dom";
 
 export const MessageList = () => {
+  const { roomId } = useParams();
   const styles = useStyles();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({});
   const [value, setValue] = useState("");
   const ref = useRef(null);
   const refMessages = useRef(null);
 
-  useEffect(() => {
-    const lastMessages = messages[messages.length - 1];
-    let timerId = null;
-    if (messages.length && lastMessages.author !== "Bot") {
-      refMessages.current?.scrollTo(0, refMessages.current?.scrollHeight);
-      timerId = setTimeout(() => {
-        setMessages([
+  const sendMessage = useCallback(
+    (author = "User", botMessage) => {
+      if (value || botMessage) {
+        setMessages({
           ...messages,
-          {
-            author: "Bot",
-            message: "hello from bot",
-            date: new Date(),
-            id: uuidv4(),
-          },
-        ]);
-      }, 1000);
+          [roomId]: [
+            ...(messages[roomId] ?? []),
+            { author, message: value || botMessage, id: new Date() },
+          ],
+        });
+        setValue("");
+      }
+    },
+    [messages, value, roomId]
+  );
+
+  useEffect(() => {
+    const roomMassages = messages[roomId] ?? [];
+    const lastMessages = roomMassages[roomMassages.length - 1];
+    let timerId = null;
+
+    if (roomMassages.length && lastMessages.author !== "Bot") {
+      timerId = setTimeout(() => {
+        sendMessage("Bot", "Hello from bot");
+      }, 300);
     }
+    refMessages.current?.scrollTo(0, refMessages.current?.scrollHeight);
+
     return () => clearInterval(timerId);
-  }, [messages]);
+  }, [messages, roomId, sendMessage]);
 
   useEffect(() => {
     ref.current?.focus();
   }, []);
-
-  const sendMessage = () => {
-    if (value) {
-      setMessages([
-        ...messages,
-        { author: "User", message: value, date: new Date(), id: uuidv4() },
-      ]);
-      setValue("");
-    }
-  };
 
   const handlePressInput = ({ code }) => {
     if (code === "Enter") {
       sendMessage();
     }
   };
+
+  const roomMassages = messages[roomId] ?? [];
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.massages} ref={refMessages}>
-        {messages.map((message, index) => (
+        {roomMassages.map((message, index) => (
           <Message message={message} key={index} />
         ))}
       </div>

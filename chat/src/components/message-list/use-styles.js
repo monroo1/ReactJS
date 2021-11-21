@@ -8,12 +8,24 @@ export const useStyles = makeStyles(() => {
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-end",
-      width: "60%",
-      background: "linear-gradient(to bottom right, #d1edf2, pink);",
+      width: "100%",
     },
     massages: {
       overflowY: "auto",
+      paddingRight: "10px",
+      "&::-webkit-scrollbar": {
+        width: "0.4em",
+      },
+      "&::-webkit-scrollbar-track": {
+        boxShadow: "inset 0 0 3px grey",
+        borderRadius: "10px",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: "rgba(0,0,0,.4)",
+        borderRadius: "10px",
+      },
     },
+
     input: {
       color: "#9a9fa1",
       padding: "10px 0",

@@ -11,5 +11,10 @@ export const headerStyles = makeStyles(() => {
       alignItems: "center",
       justifyContent: "space-between",
     },
+    wrapper: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
   };
 });
