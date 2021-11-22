@@ -1,26 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import { ChatPage, ProfilePage } from "./pages";
+import { Header } from "./components";
+import "./normilize.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const title = "Helllo World!";
-
-const MessageComponent = ({ message }) => {
-return (
-    <div class="main">
-        <h1>{ title }</h1>
-        <div>Переданный текст: {message}</div>
-    </div>
-    );
-};
-
-const AppComponent = ({ messageApp }) => {
-  return <MessageComponent message={messageApp}/>
-}
-
-ReactDOM.render( 
-    <React.StrictMode>
-      <MessageComponent message="Здесь скоро что-то будет..." />
-      <AppComponent messageApp="Еще одна прикольная инфа."/>
-    </React.StrictMode>,
-    document.getElementById('root')
+ReactDOM.render(
+  <React.StrictMode>
+    <BrowserRouter>
+    <Header />
+      <Routes>
+        <Route path="/chat/*" element={<ChatPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/*" element={<h1>404</h1>} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
