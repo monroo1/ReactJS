@@ -9,11 +9,38 @@ import {
   Button,
 } from "@mui/material";
 import { AlternateEmail, Phone, PersonOutline } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { profileSelector } from "../store/profile";
+import { updateProfile } from "../store/profile";
 
 export const ProfilePage = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state);
+
+  const profileSelectorByMemo = useMemo(() => {
+    return profileSelector("test props");
+  }, []);
+
+  const { name, phone, userName } = useSelector(
+    profileSelectorByMemo,
+    shallowEqual
+  );
+
+  const [form, setForm] = useState({
+    name: name,
+    phone: phone,
+    userName: userName,
+  });
+
+  const handleChangeForm = (e) => {
+    const field = e.target.getAttribute("data-name");
+
+    setForm({
+      ...form,
+      [field]: e.target.value,
+    });
+  };
+
   return (
     <div
       style={{
@@ -30,23 +57,23 @@ export const ProfilePage = () => {
           component="nav"
           dense
         >
-          <ListItemButton>
+          <ListItemButton dense>
             <ListItemIcon>
               <PersonOutline sx={{ width: 35, height: 35 }} />
             </ListItemIcon>
-            <ListItemText primary={user.name} secondary="Name" />
+            <ListItemText primary={name} secondary="Name" />
           </ListItemButton>
-          <ListItemButton>
+          <ListItemButton dense>
             <ListItemIcon>
               <Phone sx={{ width: 30, height: 30 }} />
             </ListItemIcon>
-            <ListItemText primary={user.phone} secondary="Phone" />
+            <ListItemText primary={phone} secondary="Phone" />
           </ListItemButton>
           <ListItemButton>
             <ListItemIcon>
               <AlternateEmail sx={{ width: 30, height: 30 }} />
             </ListItemIcon>
-            <ListItemText primary={user.userName} secondary="User name" />
+            <ListItemText primary={userName} secondary="User name" />
           </ListItemButton>
         </List>
       </div>
@@ -64,30 +91,33 @@ export const ProfilePage = () => {
           id="outlined-basic"
           label="Outlined"
           variant="outlined"
-          onInput={(e) => {
-            user.name = e.target.value;
+          onChange={handleChangeForm}
+          inputProps={{
+            "data-name": "name",
           }}
         />
         <TextField
           id="filled-basic"
           label="Filled"
           variant="outlined"
-          onInput={(e) => {
-            user.phone = e.target.value;
+          onChange={handleChangeForm}
+          inputProps={{
+            "data-name": "phone",
           }}
         />
         <TextField
           id="standard-basic"
           label="Standard"
           variant="outlined"
-          onInput={(e) => {
-            user.userName = e.target.value;
+          onChange={handleChangeForm}
+          inputProps={{
+            "data-name": "userName",
           }}
         />
         <Button
           variant="contained"
           color="success"
-          onClick={() => dispatch({ type: "form" })}
+          onClick={() => dispatch(updateProfile(form))}
         >
           Success
         </Button>
