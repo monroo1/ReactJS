@@ -1,75 +1,63 @@
-import { React, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { ChatItem } from "./chat-item";
-import { useStyles } from "./use-styles";
-import { Settings, Edit, AddBox, Search } from "@mui/icons-material";
+import { AddBox, Search } from "@mui/icons-material";
 import { List, Input, InputAdornment, IconButton } from "@mui/material";
 
-export const ChatList = () => {
-  const styles = useStyles();
-  const { roomId } = useParams();
-  const [chats] = useState([
-    {
-      name: "ReactJS",
-      lastAuthor: "User",
-      lastMessage: "lastMessage",
-    },
-    {
-      name: "JS, HTML and CSS",
-      lastAuthor: "User",
-      lastMessage: "lastMessage",
-    },
-    {
-      name: "Общение",
-      lastAuthor: "User",
-      lastMessage: "lastMessage",
-    },
-    {
-      name: "Another chat",
-      lastAuthor: "User",
-      lastMessage: "lastMessage",
-    },
-  ]);
+import {
+  conversationsSelector,
+  createConversation,
+} from "../../store/conversations";
 
+export const ChatList = () => {
+  const dispatch = useDispatch();
+  const { roomId } = useParams();
+
+  const conversations = useSelector(conversationsSelector);
+
+  const createConversationByName = () => {
+    const name = prompt("Введите название комнаты");
+
+    const isValidName = !conversations.includes(name);
+
+    if (name && isValidName) {
+      dispatch(createConversation(name));
+    } else {
+      alert("не валидная комната");
+    }
+  };
   return (
     <>
-      <div>
-        <Input
-          style={{ padding: "0 20px" }}
-          id="filled-basic"
-          placeholder="Find chat..."
-          variant="filled"
-          fullWidth
-          endAdornment={
+      <List>
+        {conversations.map((chatItem) => (
+          <Link key={chatItem} to={`/chat/${chatItem}`}>
+            <ChatItem
+              name={chatItem}
+              lastMessage={chatItem}
+              lastAuthor={chatItem}
+              selected={chatItem === roomId}
+              dispatch={dispatch}
+            />
+          </Link>
+        ))}
+      </List>
+      <Input
+        style={{ padding: "0 20px" }}
+        id="filled-basic"
+        placeholder="Find chat..."
+        variant="filled"
+        fullWidth
+        endAdornment={
+          <>
             <InputAdornment position="end">
               <Search />
             </InputAdornment>
-          }
-        />
-        <List>
-          {chats.map((chatItem) => (
-            <Link key={chatItem.name} to={`/chat/${chatItem.name}`}>
-              <ChatItem
-                name={chatItem.name}
-                lastMessage={chatItem.lastMessage}
-                lastAuthor={chatItem.lastAuthor}
-                selected={chatItem.name === roomId}
-              />
-            </Link>
-          ))}
-        </List>
-      </div>
-      <div className={styles.panel}>
-        <IconButton>
-          <Settings sx={{ fontSize: "25px", color: "black" }} />
-        </IconButton>
-        <IconButton>
-          <Edit sx={{ fontSize: "25px", color: "black" }} />
-        </IconButton>
-        <IconButton>
-          <AddBox sx={{ fontSize: "25px", color: "black" }} />
-        </IconButton>
-      </div>
+            <IconButton onClick={createConversationByName}>
+              <AddBox sx={{ fontSize: "25px", color: "black" }} />
+            </IconButton>
+          </>
+        }
+      />
     </>
   );
 };

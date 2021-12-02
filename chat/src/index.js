@@ -5,6 +5,7 @@ import { store } from "./store";
 import { ChatPage, ProfilePage } from "./pages";
 import { Header } from "./components";
 import "./normilize.css";
+import "./globalStyles.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 ReactDOM.render(
