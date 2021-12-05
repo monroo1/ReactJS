@@ -66,7 +66,7 @@ export const MessageList = () => {
     <div className={styles.wrapper}>
       <div className={styles.massages} ref={refMessages}>
         {messages.map((message, index) => (
-          <Message message={message} key={index} />
+          <Message message={message} key={index} roomId={roomId} />
         ))}
       </div>
       <Input
