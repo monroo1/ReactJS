@@ -19,67 +19,69 @@ export const ChatItem = (item) => {
   };
 
   return (
-    <ContextMenuTrigger id="contextmenu">
-      <ContextMenu id="contextmenu">
-        <MenuItem data={{ foo: item.name }} onClick={deleteRoom}>
-          <DeleteForever sx={{ color: "black", marginRight: "10px" }} />
-          <span style={{ color: "black" }}>Delete</span>
-        </MenuItem>
-      </ContextMenu>
-      <ListItem
-        selected={item.selected ? true : false}
-        secondaryAction={
-          <>
-            <Typography
-              sx={{
-                fontSize: "12px",
-                color: "#808080",
-                display: "inline",
-              }}
-              component="span"
-            >
-              12:30
-            </Typography>
-          </>
-        }
-      >
-        <ListItemAvatar>
-          <Avatar
-            sx={{
-              width: 40,
-              height: 40,
-            }}
-          />
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography
-              sx={{
-                color: "black",
-                display: "inline",
-                fontWeight: "600",
-              }}
-              component="span"
-            >
-              {item.name}
-            </Typography>
-          }
-          secondary={
+    <>
+      <ContextMenuTrigger id="contextmenu">
+        <ListItem
+          selected={item.selected ? true : false}
+          secondaryAction={
             <>
               <Typography
                 sx={{
-                  color: "black",
+                  fontSize: "12px",
+                  color: "#808080",
                   display: "inline",
                 }}
                 component="span"
               >
-                {item.lastAuthor}
+                12:30
               </Typography>
-              {` - ${item.lastMessage}`}
             </>
           }
-        />
-      </ListItem>
-    </ContextMenuTrigger>
+        >
+          <ListItemAvatar>
+            <Avatar
+              sx={{
+                width: 40,
+                height: 40,
+              }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography
+                sx={{
+                  color: "black",
+                  display: "inline",
+                  fontWeight: "600",
+                }}
+                component="span"
+              >
+                {item.name}
+              </Typography>
+            }
+            secondary={
+              <>
+                <Typography
+                  sx={{
+                    color: "black",
+                    display: "inline",
+                  }}
+                  component="span"
+                >
+                  {item.lastAuthor}
+                </Typography>
+                {` - ${item.lastMessage}`}
+              </>
+            }
+          />
+        </ListItem>
+      </ContextMenuTrigger>
+      <ContextMenu id="contextmenu">
+        <MenuItem data={{ foo: item.name }} onClick={console.log("as")}>
+          <DeleteForever sx={{ color: "black", marginRight: "10px" }} />
+          <span style={{ color: "black" }}>Delete</span>
+        </MenuItem>
+      </ContextMenu>
+    </>
   );
 };
